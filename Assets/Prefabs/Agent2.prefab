@@ -152,7 +152,7 @@ MonoBehaviour:
   MaxStep: 0
   id: 1
   position: {x: 0, y: 0, z: 0}
-  maxBombs: 2
+  maxBombs: 4
 --- !u!114 &6274086036179442051
 MonoBehaviour:
   m_ObjectHideFlags: 0
