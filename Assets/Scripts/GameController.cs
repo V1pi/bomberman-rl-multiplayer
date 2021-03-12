@@ -127,8 +127,7 @@ public class GameController : MonoBehaviour {
         nDeads++;
         foreach (AgentController agent in agents) {
             if(agent.position == cellPos && agent.gameObject.activeSelf) {
-                agent.AddReward(-timer / matchTime);
-                if(bomber != null && agent.id != bomber.id) { // Morreu pq alguem matou ele
+                if (bomber != null && agent.id != bomber.id) { // Morreu pq alguem matou ele
                     nKillsPerAgent[bomber.id]++;
                     //agent.AddReward(-1);
                     /*bomber.AddReward(0.2f);
