@@ -24,7 +24,7 @@ behaviors:
     keep_checkpoints: 5
     max_steps: 10000000
     time_horizon: 64
-    summary_freq: 2000
+    summary_freq: 10000
     threaded: true
     self_play:
       save_steps: 60000
