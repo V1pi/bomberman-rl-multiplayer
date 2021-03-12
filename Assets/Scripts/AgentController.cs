@@ -16,7 +16,7 @@ public enum ActionState {
 }
 
 public class AgentController : Agent {
-    public int id;
+    public EnviromenentType agentType;
     public Vector3Int position;
     private ActionState currentAction = ActionState.NONE;
     private GameController gameController;
@@ -29,8 +29,7 @@ public class AgentController : Agent {
         currentAction = ActionState.NONE;
     }
 
-    public void SetConfigs(int id, Vector3Int position, GameController gameController) {
-        this.id = id;
+    public void SetConfigs(Vector3Int position, GameController gameController) {
         this.position = position;
         this.gameController = gameController;
     }
@@ -45,7 +44,7 @@ public class AgentController : Agent {
         ActionSegment<int> actions = actionBuffers.DiscreteActions;
         ActionState action = (ActionState) actions[0];
         if(action != ActionState.BOMB) {
-            this.position = gameController.MovePlayer(action, position, this.transform);
+            this.position = gameController.MovePlayer(action, position, this);
         } else if(bombs > 0) {
             gameController.AddBomb(this, position);
         }
@@ -57,12 +56,24 @@ public class AgentController : Agent {
     }
 
     public override void CollectObservations(VectorSensor sensor) {
-        int[][] map = gameController.GetOwnMap(position);
-        for(int i = 0; i < 19; i++) {
+        int[][] map = gameController.GetMap();
+        if(agentType == EnviromenentType.AGENT_1) {
+            sensor.AddObservation(((int)EnviromenentType.AGENT_2) / 13f);
+        } else {
+            sensor.AddObservation(((int)EnviromenentType.AGENT_1) / 13f);
+        }
+        sensor.AddObservation(bombs);
+        sensor.AddObservation(position);
+        foreach (Vector3Int bomb in gameController.GetAllBombsMap()) {
+            sensor.AddObservation(bomb);
+        }
+        for (int i = 0; i < 19; i++) {
             for (int j = 0; j < 13; j++) {
-                sensor.AddObservation(map[i][j]/11);
+                sensor.AddObservation(map[i][j]/13);
             }
         }
+        
+        
     }
 
     public override void Heuristic(in ActionBuffers actionsOut) {
@@ -74,32 +85,32 @@ public class AgentController : Agent {
     private void Update() {
         ActionState currentAction = this.currentAction;
 
-        if (Input.GetKeyDown(id==1 ? KeyCode.RightControl : KeyCode.Space)) {
+        if (Input.GetKeyDown(agentType==EnviromenentType.AGENT_2 ? KeyCode.RightControl : KeyCode.Space)) {
             currentAction = ActionState.BOMB;
-        } else if (Input.GetKeyUp(id == 1 ? KeyCode.RightControl : KeyCode.Space)) {
+        } else if (Input.GetKeyUp(agentType == EnviromenentType.AGENT_2 ? KeyCode.RightControl : KeyCode.Space)) {
             currentAction = ActionState.NONE;
         }
-        if (Input.GetKeyDown(id == 1 ? KeyCode.RightArrow : KeyCode.D)) {
+        if (Input.GetKeyDown(agentType == EnviromenentType.AGENT_2 ? KeyCode.RightArrow : KeyCode.D)) {
             currentAction = ActionState.RIGHT;
-        } else if (Input.GetKeyUp(id == 1 ? KeyCode.RightArrow : KeyCode.D)) {
+        } else if (Input.GetKeyUp(agentType == EnviromenentType.AGENT_2 ? KeyCode.RightArrow : KeyCode.D)) {
             currentAction = ActionState.NONE;
         }
 
-        if (Input.GetKeyDown(id == 1 ? KeyCode.LeftArrow : KeyCode.A)) {
+        if (Input.GetKeyDown(agentType == EnviromenentType.AGENT_2 ? KeyCode.LeftArrow : KeyCode.A)) {
             currentAction = ActionState.LEFT;
-        } else if (Input.GetKeyUp(id == 1 ? KeyCode.LeftArrow : KeyCode.A)) {
+        } else if (Input.GetKeyUp(agentType == EnviromenentType.AGENT_2 ? KeyCode.LeftArrow : KeyCode.A)) {
             currentAction = ActionState.NONE;
         }
 
-        if (Input.GetKeyDown(id == 1 ? KeyCode.UpArrow : KeyCode.W)) {
+        if (Input.GetKeyDown(agentType == EnviromenentType.AGENT_2 ? KeyCode.UpArrow : KeyCode.W)) {
             currentAction = ActionState.UP;
-        } else if (Input.GetKeyUp(id == 1 ? KeyCode.UpArrow : KeyCode.W)) {
+        } else if (Input.GetKeyUp(agentType == EnviromenentType.AGENT_2 ? KeyCode.UpArrow : KeyCode.W)) {
             currentAction = ActionState.NONE;
         }
 
-        if (Input.GetKeyDown(id == 1 ? KeyCode.DownArrow : KeyCode.S)) {
+        if (Input.GetKeyDown(agentType == EnviromenentType.AGENT_2 ? KeyCode.DownArrow : KeyCode.S)) {
             currentAction = ActionState.DOWN;
-        } else if (Input.GetKeyUp(id == 1 ? KeyCode.DownArrow : KeyCode.S)) {
+        } else if (Input.GetKeyUp(agentType == EnviromenentType.AGENT_2 ? KeyCode.DownArrow : KeyCode.S)) {
             currentAction = ActionState.NONE;
         }
 

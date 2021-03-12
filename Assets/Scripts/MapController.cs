@@ -14,7 +14,9 @@ public enum EnviromenentType {
     WALL,
     DESTRUCTABLE,
     OWN,
-    OWN_BOMB
+    OWN_BOMB,
+    AGENT_1,
+    AGENT_2
 }
 
 public class MapController : MonoBehaviour {
@@ -30,6 +32,7 @@ public class MapController : MonoBehaviour {
     private Vector3Int rightPosEnding = new Vector3Int(18, 12, 0);
     private bool toggle = true;
     private GameController gameController;
+    private Dictionary<EnviromenentType, Vector3Int> agentsPos = new Dictionary<EnviromenentType, Vector3Int>();
 
     private void Awake() {
         Transform grid = this.transform.parent.Find("Grid");
@@ -64,14 +67,15 @@ public class MapController : MonoBehaviour {
         endingTime = 0;
     }
 
-    public bool MovePlayer(Vector3Int oldPos, Vector3Int newPos) {
+    public bool MovePlayer(EnviromenentType agentType, Vector3Int oldPos, Vector3Int newPos) {
         EnviromenentType newPosType = (EnviromenentType)map[newPos.x][newPos.y];
         EnviromenentType oldPosType = (EnviromenentType)map[oldPos.x][oldPos.y];
         if (newPosType == EnviromenentType.EXPLOSION) {
             gameController.KillAgent(oldPos);
         } else {
             if(newPosType == EnviromenentType.NONE) {
-                if(oldPosType == EnviromenentType.PLAYER_BOMB) {
+                agentsPos[agentType] = newPos;
+                if (oldPosType == EnviromenentType.PLAYER_BOMB) {
                     AddToMap(EnviromenentType.BOMB, oldPos);
                 } else {
                     AddToMap(EnviromenentType.NONE, oldPos);
@@ -94,11 +98,27 @@ public class MapController : MonoBehaviour {
 
     public int[][] GetMap() {
         int[][] newMap = new int[19][];
+        for (int i = 0; i < 19; i++) {
+            newMap[i] = new int[13];
+            for (int j = 0; j < 13; j++) {
+                newMap[i][j] = map[i][j];
+            }
+        }
+        return newMap;
+    }
+
+
+    public int[][] GetPlayerMap() {
+        int[][] newMap = new int[19][];
         for(int i = 0; i < 19; i++) {
             newMap[i] = new int[13];
             for (int j = 0; j < 13; j++) {
                 newMap[i][j] = map[i][j];
             }
+        }
+        foreach(var key in agentsPos.Keys) {
+            Vector3Int pos = agentsPos[key];
+            newMap[pos.x][pos.y] = (int)key;
         }
         return newMap;
     }
@@ -111,6 +131,11 @@ public class MapController : MonoBehaviour {
     public bool CanPlantBomb(Vector3Int cellPos) {
         EnviromenentType type = (EnviromenentType)map[cellPos.x][cellPos.y];
         return type != EnviromenentType.BOMB && type != EnviromenentType.PLAYER_BOMB;
+    }
+
+    public void AddNewPlayerToMap(EnviromenentType agent, Vector3Int cellPos) {
+        agentsPos[agent] = cellPos;
+        AddToMap(EnviromenentType.PLAYER, cellPos);
     }
 
     public void AddNewObjectToMap(EnviromenentType type, Vector3Int cellPos) {

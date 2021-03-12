@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour {
     [SerializeField] private int nAgentsInGame = 1;
     private AgentController[] agents;
     private int nDeads = 0;
-    private Dictionary<int, int> nKillsPerAgent = new Dictionary<int, int>();
+    private Dictionary<EnviromenentType, int> nKillsPerAgent = new Dictionary<EnviromenentType, int>();
     private Dictionary<ActionState, Vector3Int> directions = new Dictionary<ActionState, Vector3Int>();
     public GameObject bombPrefab;
     private List<GameObject> bombs = new List<GameObject>();
@@ -54,7 +54,7 @@ public class GameController : MonoBehaviour {
         timer = 0;
         nDeads = 0;
         isMapDead = false;
-        nKillsPerAgent = new Dictionary<int, int>();
+        nKillsPerAgent = new Dictionary<EnviromenentType, int>();
         mapController.GenerateNewMap();
         InitializeAgents();
         currentGameState = GameState.RUNNING;
@@ -63,7 +63,7 @@ public class GameController : MonoBehaviour {
         for (int i = 0; i < nAgentsInGame; i++) {
             Vector3 worldPos = mapController.GetWorldFromCellPos(spawnPositions[i]);
             GameObject agent = null;
-            nKillsPerAgent[i] = 0;
+            
             if (agents[i] != null) {
                 agent = agents[i].gameObject;
                 agent.transform.position = worldPos;
@@ -71,8 +71,9 @@ public class GameController : MonoBehaviour {
             } else {
                 agent = Instantiate(prefabs[i], worldPos, Quaternion.identity, this.transform.parent);
             }
-            mapController.AddNewObjectToMap(EnviromenentType.PLAYER, spawnPositions[i]);
-            agent.GetComponent<AgentController>().SetConfigs(i, spawnPositions[i], this);
+            nKillsPerAgent[agent.GetComponent<AgentController>().agentType] = 0;
+            mapController.AddNewPlayerToMap(agent.GetComponent<AgentController>().agentType, spawnPositions[i]);
+            agent.GetComponent<AgentController>().SetConfigs(spawnPositions[i], this);
             agents[i] = agent.GetComponent<AgentController>();
         }
     }
@@ -91,7 +92,7 @@ public class GameController : MonoBehaviour {
             if (nDeads == nAgentsInGame - 1) {
                 foreach (AgentController agent in agents) {
                     if (agent.gameObject.activeSelf) {
-                        if(nKillsPerAgent[agent.id] != 0) { // Matou e terminou vivo
+                        if(nKillsPerAgent[agent.agentType] != 0) { // Matou e terminou vivo
                             agent.AddReward(1);
                         } else {
                             // agent.AddReward(-1f); // last man alive
@@ -111,12 +112,12 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    public Vector3Int MovePlayer(ActionState action, Vector3Int lastPos, Transform agentPos) {
+    public Vector3Int MovePlayer(ActionState action, Vector3Int lastPos, AgentController agent) {
         if (action != ActionState.NONE) {
             Vector3Int newPos = lastPos + directions[action];
             if(newPos.x >= 0 && newPos.x < 19 && newPos.y >= 0 && newPos.y < 13 &&
-                mapController.MovePlayer(lastPos, newPos)) {
-                agentPos.position = mapController.GetWorldFromCellPos(newPos);
+                mapController.MovePlayer(agent.agentType, lastPos, newPos)) {
+                agent.transform.position = mapController.GetWorldFromCellPos(newPos);
                 return newPos;
             }
         }
@@ -127,8 +128,8 @@ public class GameController : MonoBehaviour {
         nDeads++;
         foreach (AgentController agent in agents) {
             if(agent.position == cellPos && agent.gameObject.activeSelf) {
-                if (bomber != null && agent.id != bomber.id) { // Morreu pq alguem matou ele
-                    nKillsPerAgent[bomber.id]++;
+                if (bomber != null && agent.agentType != bomber.agentType) { // Morreu pq alguem matou ele
+                    nKillsPerAgent[bomber.agentType]++;
                     //agent.AddReward(-1);
                     /*bomber.AddReward(0.2f);
                     agent.AddReward(-0.8f);*/
@@ -164,11 +165,25 @@ public class GameController : MonoBehaviour {
         items.Add(explosion);
     }
 
-    public int[][] GetOwnMap(Vector3Int cellPos) {
-        int[][] map = mapController.GetMap();
-        EnviromenentType oldType = (EnviromenentType) map[cellPos.x][cellPos.y];
-        map[cellPos.x][cellPos.y] = (int) (oldType == EnviromenentType.PLAYER_BOMB ? EnviromenentType.OWN_BOMB : EnviromenentType.OWN);
+    public int[][] GetMap() {
+        int[][] map = mapController.GetPlayerMap();
         return map;
+    }
+
+    public Vector3Int[] GetAllBombsMap() {
+        int[][] map = mapController.GetMap();
+        List<Vector3Int> bombs = new List<Vector3Int>();
+        for(int i =0; i < 19; i++) {
+            for(int j = 0; j < 13; j++) {
+                if (map[i][j] == (int) EnviromenentType.BOMB || map[i][j] == (int)EnviromenentType.PLAYER_BOMB) {
+                    bombs.Add(new Vector3Int(i, j, 1));
+                }
+            }
+        }
+        while (bombs.Count != 8) {
+            bombs.Add(Vector3Int.zero);
+        }
+        return bombs.ToArray();
     }
 
     public void AddBomb(AgentController bomber, Vector3Int position) {
