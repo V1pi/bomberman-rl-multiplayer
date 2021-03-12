@@ -57,7 +57,7 @@ public class AgentController : Agent {
         int[][] map = gameController.GetOwnMap(position);
         for(int i = 0; i < 19; i++) {
             for (int j = 0; j < 13; j++) {
-                sensor.AddObservation(map[i][j]);
+                sensor.AddObservation(map[i][j]/11);
             }
         }
     }

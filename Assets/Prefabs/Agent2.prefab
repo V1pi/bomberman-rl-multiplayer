@@ -131,7 +131,7 @@ MonoBehaviour:
   m_BehaviorType: 0
   m_BehaviorName: Bomberman
   TeamId: 1
-  m_UseChildSensors: 1
+  m_UseChildSensors: 0
   m_UseChildActuators: 1
   m_ObservableAttributeHandling: 0
 --- !u!114 &3268241058515173653

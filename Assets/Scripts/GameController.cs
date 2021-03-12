@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour {
     [SerializeField] private float matchTime = 30f;
     [Range(1, 10)]
     [SerializeField] private float timeToEnding = 5f;
-    private Vector3Int[] spawnPositions = new Vector3Int[] { new Vector3Int(1,1,0), new Vector3Int(1, 11, 0), new Vector3Int(17, 11, 0), new Vector3Int(17, 1, 0) };
+    private Vector3Int[] spawnPositions = new Vector3Int[] { new Vector3Int(1,1,0), new Vector3Int(17, 11, 0), new Vector3Int(1, 11, 0), new Vector3Int(17, 1, 0) };
     private MapController mapController;
     private float timer = 0;
     private GameState currentGameState = GameState.RUNNING;
@@ -86,7 +86,7 @@ public class GameController : MonoBehaviour {
                 ResetEnviroment();
                 timer = 0;
             }
-            if (nDeads == 3) {
+            if (nDeads == nAgentsInGame - 1) {
                 foreach (AgentController agent in agents) {
                     if (agent.gameObject.activeSelf) {
                         agent.AddReward(-timer / matchTime);
