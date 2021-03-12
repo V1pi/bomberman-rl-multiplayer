@@ -1,34 +1,35 @@
 behaviors:
   Bomberman:
-    trainer_type: sac
+    trainer_type: ppo
     hyperparameters:
       batch_size: 256
-      buffer_size: 51200
+      buffer_size: 10240
       learning_rate: 3e-4
-      init_entcoef: 0.5
-      tau: 0.005
-      steps_per_update: 1
-      learning_rate_schedule: constant
+      num_epoch: 3
+      lambd: 0.95
+      epsilon: 0.2
+      beta: 5.0e-3
+      learning_rate_schedule: linear
     network_settings:
       normalize: false
-      hidden_units: 256
+      hidden_units: 128
       num_layers: 2
-      vis_encode_type: resnet
+      vis_encode_type: simple
       memory:
-        memory_size: 64
-        sequence_length: 32
+        memory_size: 128
+        sequence_length: 64
     reward_signals:
       extrinsic:
         gamma: 0.99
         strength: 1.0
     keep_checkpoints: 5
-    max_steps: 5000000
+    max_steps: 1000000
     time_horizon: 64
-    summary_freq: 10000
+    summary_freq: 50000
     threaded: true
     self_play:
-      save_steps: 60000
-      team_change: 300000
-      swap_steps: 60000
-      window: 20
+      save_steps: 20000
+      team_change: 100000
+      swap_steps: 10000
+      window: 10
       play_against_latest_model_ratio: 0.5
