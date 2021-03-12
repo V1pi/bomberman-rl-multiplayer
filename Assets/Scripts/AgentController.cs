@@ -48,9 +48,12 @@ public class AgentController : Agent {
             this.position = gameController.MovePlayer(action, position, this.transform);
         } else if(bombs > 0) {
             gameController.AddBomb(this, position);
-            bombs--;
         }
 
+    }
+
+    public void DecreaseBombs() {
+        bombs--;
     }
 
     public override void CollectObservations(VectorSensor sensor) {

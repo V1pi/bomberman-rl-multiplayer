@@ -94,7 +94,7 @@ public class GameController : MonoBehaviour {
                         if(nKillsPerAgent[agent.id] != 0) { // Matou e terminou vivo
                             agent.AddReward(1);
                         } else {
-                            agent.AddReward(-1f); // last man alive
+                            // agent.AddReward(-1f); // last man alive
                         }
 
                         agent.gameObject.SetActive(false);
@@ -140,7 +140,6 @@ public class GameController : MonoBehaviour {
 
                     }*/
                 }
-                agent.AddReward(-1);
 
                 agent.gameObject.SetActive(false);
             }
@@ -174,6 +173,7 @@ public class GameController : MonoBehaviour {
 
     public void AddBomb(AgentController bomber, Vector3Int position) {
         if(mapController.CanPlantBomb(position)) {
+            bomber.DecreaseBombs();
             mapController.AddNewObjectToMap(EnviromenentType.PLAYER_BOMB, position);
             GameObject newBomb = GetBomb(mapController.GetWorldFromCellPos(position));
             newBomb.GetComponent<Bomb>().SetConfigs(bomber);
