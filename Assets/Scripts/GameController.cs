@@ -27,6 +27,7 @@ public class GameController : MonoBehaviour {
     private Dictionary<ActionState, Vector3Int> directions = new Dictionary<ActionState, Vector3Int>();
     public GameObject bombPrefab;
     private List<GameObject> bombs = new List<GameObject>();
+    private bool isMapDead = false;
 
     private void Awake() {
         mapController = GetComponent<MapController>();
@@ -52,6 +53,7 @@ public class GameController : MonoBehaviour {
         items.Clear();
         timer = 0;
         nDeads = 0;
+        isMapDead = false;
         nKillsPerAgent = new Dictionary<int, int>();
         mapController.GenerateNewMap();
         InitializeAgents();
@@ -89,13 +91,12 @@ public class GameController : MonoBehaviour {
             if (nDeads == nAgentsInGame - 1) {
                 foreach (AgentController agent in agents) {
                     if (agent.gameObject.activeSelf) {
-                        agent.AddReward(-timer / matchTime);
-                        if (nKillsPerAgent[agent.id] != 0) {
-                            agent.AddReward(1); // Last man alive e matou alguem
+                        if(nKillsPerAgent[agent.id] != 0) { // Matou e terminou vivo
+                            agent.AddReward(1);
                         } else {
-                            agent.AddReward(-0.8f); // last man alive
+                            agent.AddReward(-1f); // last man alive
                         }
-                       
+
                         agent.gameObject.SetActive(false);
                         ResetEnviroment();
                     }
@@ -124,27 +125,29 @@ public class GameController : MonoBehaviour {
 
     public void KillAgent(Vector3Int cellPos, AgentController bomber = null) {
         nDeads++;
-        foreach(AgentController agent in agents) {
+        foreach (AgentController agent in agents) {
             if(agent.position == cellPos && agent.gameObject.activeSelf) {
                 agent.AddReward(-timer / matchTime);
                 if(bomber != null && agent.id != bomber.id) { // Morreu pq alguem matou ele
                     nKillsPerAgent[bomber.id]++;
-                    bomber.AddReward(0.2f);
-                    agent.AddReward(-0.8f);
+                    //agent.AddReward(-1);
+                    /*bomber.AddReward(0.2f);
+                    agent.AddReward(-0.8f);*/
                 } else {
                     // Morreu pelo mapa
-                    if(bomber == null) {
-                        agent.AddReward(-0.8f);
+                    /*if(bomber == null) {
+                        isMapDead = true;
                     } else { // Se matou
-                        agent.AddReward(-1);
-                    }
-                    
-                }               
-                
+
+                    }*/
+                }
+                agent.AddReward(-1);
+
                 agent.gameObject.SetActive(false);
             }
         }
-        if(nDeads >= nAgentsInGame) {
+        
+        if (nDeads >= nAgentsInGame) {
             ResetEnviroment();
         }
     }
