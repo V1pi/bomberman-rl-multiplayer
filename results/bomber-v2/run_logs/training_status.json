@@ -1,0 +1,23 @@
+{
+    "Bomberman": {
+        "checkpoints": [
+            {
+                "steps": 355115,
+                "file_path": "results/bomber-v1/Bomberman/Bomberman-355115.onnx",
+                "reward": null,
+                "creation_time": 1615559596.927126
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 355115,
+            "file_path": "results/bomber-v1/Bomberman.onnx",
+            "reward": null,
+            "creation_time": 1615559596.927126
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.2.0",
+        "mlagents_version": "0.24.0",
+        "torch_version": "1.7.1"
+    }
+}

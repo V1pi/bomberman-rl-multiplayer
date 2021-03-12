@@ -1,0 +1,32 @@
+Mono path[0] = '/content/bomberman3/BuildLinuxHeadless/bomber_Data/Managed'
+Mono config path = '/content/bomberman3/BuildLinuxHeadless/bomber_Data/MonoBleedingEdge/etc'
+Preloaded 'lib_burst_generated.so'
+Preloaded 'libgrpc_csharp_ext.x64.so'
+PlayerPrefs - Creating folder: /root/.config/unity3d/DefaultCompany
+PlayerPrefs - Creating folder: /root/.config/unity3d/DefaultCompany/Bomberman-ML-Agents
+Unable to load player prefs
+Initialize engine version: 2019.4.21f1 (b76dac84db26)
+[Subsystems] Discovering subsystems at path /content/bomberman3/BuildLinuxHeadless/bomber_Data/UnitySubsystems
+Forcing GfxDevice: Null
+GfxDevice: creating device client; threaded=0
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Begin MonoManager ReloadAssembly
+- Completed reload, in  0.052 seconds
+UnloadTime: 0.888643 ms
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libcoreclr.so
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libcoreclr.so
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libcoreclr.so
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libSystem.dylib
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libSystem.dylib.so
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libSystem.dylib
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libcoreclr.so
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libcoreclr.so
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libcoreclr.so
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libSystem.dylib
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libSystem.dylib.so
+Fallback handler could not load library /content/bomberman3/BuildLinuxHeadless/bomber_Data/Mono/libSystem.dylib
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 7f71b512e700 -> priority: 1 
