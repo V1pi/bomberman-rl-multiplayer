@@ -186,6 +186,22 @@ public class GameController : MonoBehaviour {
         return bombs.ToArray();
     }
 
+    public Vector2 GetAgentPolarCoordinate(EnviromenentType typeAgent) {
+        Vector3 enemyPos = Vector3.zero;
+        Vector3 currentPos = Vector3.zero;
+        foreach(AgentController controller in agents) {
+            if(controller.agentType == typeAgent) {
+                currentPos = mapController.GetAgentWorldPosition(typeAgent);
+            } else {
+                enemyPos = mapController.GetAgentWorldPosition(controller.agentType);
+            }
+        }
+        Vector2 polarCoordinate = Vector2.zero;
+        polarCoordinate.x = Vector3.Distance(currentPos, enemyPos);
+        polarCoordinate.y = Vector3.Angle(currentPos, enemyPos);
+        return polarCoordinate;
+    }
+
     public void AddBomb(AgentController bomber, Vector3Int position) {
         if(mapController.CanPlantBomb(position)) {
             bomber.DecreaseBombs();

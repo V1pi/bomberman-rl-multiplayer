@@ -56,24 +56,7 @@ public class AgentController : Agent {
     }
 
     public override void CollectObservations(VectorSensor sensor) {
-        int[][] map = gameController.GetMap();
-        if(agentType == EnviromenentType.AGENT_1) {
-            sensor.AddObservation(((int)EnviromenentType.AGENT_2) / 13f);
-        } else {
-            sensor.AddObservation(((int)EnviromenentType.AGENT_1) / 13f);
-        }
-        sensor.AddObservation(bombs);
-        sensor.AddObservation(position);
-        foreach (Vector3Int bomb in gameController.GetAllBombsMap()) {
-            sensor.AddObservation(bomb);
-        }
-        for (int i = 0; i < 19; i++) {
-            for (int j = 0; j < 13; j++) {
-                sensor.AddObservation(map[i][j]/13);
-            }
-        }
-        
-        
+        sensor.AddObservation(gameController.GetAgentPolarCoordinate(agentType));
     }
 
     public override void Heuristic(in ActionBuffers actionsOut) {

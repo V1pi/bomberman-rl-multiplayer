@@ -107,6 +107,11 @@ public class MapController : MonoBehaviour {
         return newMap;
     }
 
+    public Vector3 GetAgentWorldPosition(EnviromenentType agentType) {
+        Vector3Int cellPos = agentsPos[agentType] + posBegin;
+        return tilemap.GetCellCenterWorld(cellPos);
+    }
+
 
     public int[][] GetPlayerMap() {
         int[][] newMap = new int[19][];
