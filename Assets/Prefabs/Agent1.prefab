@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f67c7e722ba14acd9153bb4488bff6e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SensorName: RayPerceptionSensor
+  m_SensorName: RayPerceptionSensor2
   m_DetectableTags:
   - Wall
   m_RaysPerDirection: 6
@@ -217,6 +217,6 @@ MonoBehaviour:
   m_RayLayerMask:
     serializedVersion: 2
     m_Bits: 4294967291
-  m_ObservationStacks: 1
+  m_ObservationStacks: 3
   rayHitColor: {r: 0, g: 1, b: 0.07280898, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
